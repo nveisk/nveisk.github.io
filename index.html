@@ -3,49 +3,86 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Moja Strona na GitHubie</title>
+    <title>Gratulacje! - Klatka Faradaya</title>
     <style>
-        /* Stylizacja CSS - żeby strona ładnie wyglądała */
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: #0f172a; /* Ciemne, eleganckie tło */
+            color: #f8fafc;
             margin: 0;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+            padding: 20px;
         }
-        .container {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 2rem;
-            border-radius: 15px;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-            text-align: center;
-            max-width: 400px;
-            border: 1px solid rgba(255, 255, 255, 0.18);
-        }
-        h1 { margin-bottom: 0.5rem; }
-        p { font-size: 1.1rem; opacity: 0.9; }
-        .status {
-            display: inline-block;
-            background: #4caf50;
-            padding: 5px 15px;
+
+        .card {
+            background: rgba(30, 41, 59, 0.7);
+            border: 2px solid #38bdf8; /* Jasnoniebieska ramka kojarząca się z wyładowaniami */
             border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: bold;
-            margin-top: 1rem;
+            padding: 30px;
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 0 20px rgba(56, 189, 248, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .image-container {
+            width: 100%;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .image-container img {
+            width: 100%;
+            display: block;
+            transition: transform 0.3s ease;
+        }
+
+        .image-container img:hover {
+            transform: scale(1.02);
+        }
+
+        h1 {
+            color: #38bdf8;
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            text-shadow: 0 0 10px rgba(56, 189, 248, 0.5);
+        }
+
+        p {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            margin: 0;
+            color: #e2e8f0;
+        }
+
+        .emoji {
+            font-size: 1.5rem;
+            margin-top: 10px;
+            display: block;
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <h1>Sukces! 🚀</h1>
-        <p>Moja pierwsza strona hostowana na <strong>GitHub Pages</strong> właśnie działa.</p>
-        <div class="status">LIVE</div>
+    <div class="card">
+        <div class="image-container">
+            <img src="https://cdn.discordapp.com/attachments/1474483218651676883/1485723429847040140/Klatka-Faradaya---Faraday-Cage.png?ex=69c2e745&is=69c195c5&hm=e3b430e969ad2331ac49c0665f8a3d0440ae1b34447b05719ef42563e534f633&" 
+                 alt="Klatka Faradaya">
+        </div>
+
+        <h1>Gratulacje! Udało Wam się!</h1>
+        
+        <p>
+            Znaleźliście klatkę Faradaya! Dzięki waszej pomocy będzie on mógł kontynuować swój eksperyment!
+        </p>
+        
+        <span class="emoji">🦾 🚀</span>
     </div>
 
 </body>
