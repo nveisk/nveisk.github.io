@@ -3,87 +3,523 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gratulacje! - Klatka Faradaya</title>
+    <title>Gratulacje! — Klatka Faradaya</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Syne+Mono&family=Syne:wght@700;800&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --bg: #040d1a;
+            --panel: rgba(5, 18, 38, 0.92);
+            --blue: #00c8ff;
+            --blue-dim: rgba(0, 200, 255, 0.15);
+            --blue-border: rgba(0, 200, 255, 0.25);
+            --gold: #ffe566;
+            --gold-dim: rgba(255, 229, 102, 0.12);
+            --white: #dff3ff;
+            --muted: rgba(180, 220, 240, 0.55);
+            --glow: 0 0 30px rgba(0,200,255,0.25);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
         body {
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background: #0f172a; /* Ciemne, eleganckie tło */
-            color: #f8fafc;
-            margin: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            font-family: 'Space Grotesk', sans-serif;
+            background: var(--bg);
+            color: var(--white);
             min-height: 100vh;
-            padding: 20px;
+            overflow-x: hidden;
         }
 
-        .card {
-            background: rgba(30, 41, 59, 0.7);
-            border: 2px solid #38bdf8; /* Jasnoniebieska ramka kojarząca się z wyładowaniami */
-            border-radius: 20px;
-            padding: 30px;
-            max-width: 600px;
-            width: 100%;
+        /* ─── BACKGROUND ─── */
+        .bg-grid {
+            position: fixed; inset: 0; z-index: 0;
+            background-image:
+                linear-gradient(rgba(0,200,255,0.04) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0,200,255,0.04) 1px, transparent 1px);
+            background-size: 48px 48px;
+            animation: gridBreath 6s ease-in-out infinite;
+        }
+        @keyframes gridBreath { 0%,100%{opacity:.6} 50%{opacity:1} }
+
+        .bg-glow {
+            position: fixed; border-radius: 50%; filter: blur(120px);
+            pointer-events: none; z-index: 0;
+        }
+        .bg-glow-1 { width:700px;height:700px;background:#0040aa;opacity:.18;top:-300px;left:-200px;animation:g1 14s ease-in-out infinite; }
+        .bg-glow-2 { width:500px;height:500px;background:#00c8ff;opacity:.12;bottom:-200px;right:-100px;animation:g2 11s ease-in-out infinite; }
+        .bg-glow-3 { width:400px;height:400px;background:#ffe566;opacity:.05;top:40%;left:50%;animation:g3 9s ease-in-out infinite; }
+        @keyframes g1 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(60px,80px)} }
+        @keyframes g2 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(-80px,-60px)} }
+        @keyframes g3 { 0%,100%{transform:translate(-50%,-50%) scale(1)} 50%{transform:translate(-50%,-50%) scale(1.3)} }
+
+        canvas#sparks { position:fixed;inset:0;z-index:1;pointer-events:none; }
+
+        /* ─── LAYOUT ─── */
+        .page {
+            position: relative; z-index: 10;
+            max-width: 720px; margin: 0 auto;
+            padding: 40px 24px 80px;
+        }
+
+        /* ─── HERO ─── */
+        .hero {
             text-align: center;
-            box-shadow: 0 0 20px rgba(56, 189, 248, 0.3);
-            backdrop-filter: blur(10px);
+            margin-bottom: 48px;
+            animation: riseIn 1s cubic-bezier(.16,1,.3,1) both;
         }
+        @keyframes riseIn { from{opacity:0;transform:translateY(40px)} to{opacity:1;transform:translateY(0)} }
 
-        .image-container {
-            width: 100%;
-            border-radius: 12px;
-            overflow: hidden;
-            margin-bottom: 25px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+        .badge {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: var(--gold-dim);
+            border: 1px solid rgba(255,229,102,.3);
+            border-radius: 100px;
+            padding: 6px 18px;
+            font-family: 'Syne Mono', monospace;
+            font-size: .65rem;
+            letter-spacing: .18em;
+            color: var(--gold);
+            text-transform: uppercase;
+            margin-bottom: 28px;
         }
-
-        .image-container img {
-            width: 100%;
-            display: block;
-            transition: transform 0.3s ease;
+        .badge-dot {
+            width:6px;height:6px;background:var(--gold);border-radius:50%;
+            box-shadow:0 0 8px var(--gold);
+            animation:blink 1.4s ease-in-out infinite;
         }
-
-        .image-container img:hover {
-            transform: scale(1.02);
-        }
+        @keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
 
         h1 {
-            color: #38bdf8;
-            font-size: 1.8rem;
-            margin-bottom: 15px;
-            text-shadow: 0 0 10px rgba(56, 189, 248, 0.5);
+            font-family: 'Syne', sans-serif;
+            font-weight: 800;
+            font-size: clamp(2rem, 6vw, 3.2rem);
+            line-height: 1.1;
+            letter-spacing: -.02em;
+            margin-bottom: 18px;
+            color: #fff;
+            text-shadow: 0 0 40px rgba(0,200,255,.35);
+        }
+        h1 em { color: var(--blue); font-style: normal; }
+
+        .hero-sub {
+            font-size: 1.05rem;
+            color: var(--muted);
+            max-width: 500px;
+            margin: 0 auto 32px;
+            line-height: 1.7;
         }
 
-        p {
-            font-size: 1.2rem;
-            line-height: 1.6;
-            margin: 0;
-            color: #e2e8f0;
+        /* ─── IMAGE ─── */
+        .img-wrap {
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid var(--blue-border);
+            position: relative;
+            box-shadow: var(--glow), 0 40px 80px rgba(0,0,0,.6);
+            animation: riseIn 1s .2s cubic-bezier(.16,1,.3,1) both;
+            margin-bottom: 56px;
+        }
+        .img-wrap img { width:100%;display:block;filter:brightness(.88) saturate(1.2); transition: transform .6s ease; }
+        .img-wrap:hover img { transform: scale(1.04); }
+        .img-scanlines {
+            position:absolute;inset:0;pointer-events:none;z-index:2;
+            background: repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,200,255,.018) 4px);
+        }
+        .img-gradient {
+            position:absolute;bottom:0;left:0;right:0;height:50%;
+            background:linear-gradient(transparent,rgba(4,13,26,.85));
+            z-index:3; pointer-events:none;
+        }
+        .img-label {
+            position:absolute;bottom:16px;left:50%;transform:translateX(-50%);
+            z-index:4;
+            font-family:'Syne Mono',monospace;
+            font-size:.65rem;letter-spacing:.2em;
+            color:var(--blue);opacity:.75;
+            text-transform:uppercase;white-space:nowrap;
         }
 
-        .emoji {
-            font-size: 1.5rem;
-            margin-top: 10px;
-            display: block;
+        /* ─── SECTION ─── */
+        .section {
+            margin-bottom: 32px;
+            animation: riseIn 1s .4s cubic-bezier(.16,1,.3,1) both;
+        }
+        .section-label {
+            font-family: 'Syne Mono', monospace;
+            font-size: .6rem;
+            letter-spacing: .25em;
+            color: var(--blue);
+            text-transform: uppercase;
+            margin-bottom: 12px;
+            display: flex; align-items: center; gap: 10px;
+        }
+        .section-label::after {
+            content:'';flex:1;height:1px;
+            background:linear-gradient(90deg,var(--blue-border),transparent);
+        }
+
+        /* ─── STATS ─── */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+            margin-bottom: 32px;
+            animation: riseIn 1s .5s cubic-bezier(.16,1,.3,1) both;
+        }
+        .stat {
+            background: var(--panel);
+            border: 1px solid var(--blue-border);
+            border-radius: 16px;
+            padding: 18px 12px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            transition: transform .25s, box-shadow .25s;
+        }
+        .stat:hover { transform:translateY(-3px); box-shadow:var(--glow); }
+        .stat::before {
+            content:'';position:absolute;inset:0;
+            background:linear-gradient(135deg,var(--blue-dim),transparent);
+            opacity:0;transition:opacity .3s;
+        }
+        .stat:hover::before { opacity:1; }
+        .stat-val {
+            font-family:'Syne',sans-serif;font-weight:800;
+            font-size:1.8rem;color:var(--blue);
+            text-shadow:0 0 20px rgba(0,200,255,.5);
+            display:block;margin-bottom:4px;
+        }
+        .stat-lbl {
+            font-size:.65rem;color:var(--muted);
+            letter-spacing:.06em;text-transform:uppercase;
+        }
+
+        /* ─── EDUCATION CARDS ─── */
+        .edu-grid {
+            display: grid; gap: 16px;
+            animation: riseIn 1s .6s cubic-bezier(.16,1,.3,1) both;
+        }
+
+        .edu-card {
+            background: var(--panel);
+            border: 1px solid var(--blue-border);
+            border-radius: 18px;
+            padding: 22px 24px;
+            display: grid;
+            grid-template-columns: 48px 1fr;
+            gap: 16px;
+            align-items: start;
+            position: relative;
+            overflow: hidden;
+            transition: transform .25s, box-shadow .25s, border-color .25s;
+            cursor: default;
+        }
+        .edu-card:hover {
+            transform: translateX(4px);
+            box-shadow: var(--glow);
+            border-color: rgba(0,200,255,.5);
+        }
+        .edu-card::before {
+            content:'';position:absolute;left:0;top:0;bottom:0;width:3px;
+            background:linear-gradient(180deg,var(--blue),transparent);
+            border-radius:3px 0 0 3px;
+        }
+
+        .edu-icon {
+            width:48px;height:48px;
+            background:var(--blue-dim);
+            border:1px solid var(--blue-border);
+            border-radius:12px;
+            display:flex;align-items:center;justify-content:center;
+            font-size:1.4rem;flex-shrink:0;
+        }
+        .edu-body h3 {
+            font-family:'Syne',sans-serif;font-weight:700;
+            font-size:1rem;margin-bottom:6px;color:#fff;
+        }
+        .edu-body p {
+            font-size:.875rem;color:var(--muted);line-height:1.65;
+        }
+        .edu-body strong { color:var(--white); }
+
+        /* ─── QUIZ ─── */
+        .quiz-wrap {
+            background: var(--panel);
+            border: 1px solid var(--blue-border);
+            border-radius: 20px;
+            padding: 28px;
+            margin-bottom: 32px;
+            animation: riseIn 1s .7s cubic-bezier(.16,1,.3,1) both;
+            position: relative;
+            overflow: hidden;
+        }
+        .quiz-wrap::before {
+            content:''; position:absolute;inset:0;
+            background:radial-gradient(ellipse at top right,var(--blue-dim),transparent 60%);
+            pointer-events:none;
+        }
+        .quiz-q {
+            font-family:'Syne',sans-serif;font-weight:700;
+            font-size:1.1rem;margin-bottom:20px;color:#fff;
+        }
+        .quiz-q span { color:var(--blue); }
+        .quiz-options {
+            display:grid;gap:10px;
+        }
+        .quiz-btn {
+            background:rgba(0,200,255,0.05);
+            border:1px solid var(--blue-border);
+            border-radius:12px;
+            padding:13px 18px;
+            color:var(--white);
+            font-family:'Space Grotesk',sans-serif;
+            font-size:.9rem;
+            text-align:left;
+            cursor:pointer;
+            transition:all .2s;
+            display:flex;align-items:center;gap:12px;
+        }
+        .quiz-btn:hover { background:var(--blue-dim);border-color:rgba(0,200,255,.5);transform:translateX(4px); }
+        .quiz-btn.correct { background:rgba(0,255,100,.1);border-color:rgba(0,255,100,.4);color:#b0ffd0; pointer-events:none; }
+        .quiz-btn.wrong { background:rgba(255,80,80,.1);border-color:rgba(255,80,80,.3);color:#ffc0c0; pointer-events:none;opacity:.6; }
+        .quiz-btn .opt-key {
+            font-family:'Syne Mono',monospace;font-size:.7rem;
+            background:var(--blue-dim);border:1px solid var(--blue-border);
+            border-radius:6px;padding:2px 7px;color:var(--blue);
+            flex-shrink:0;
+        }
+        .quiz-result {
+            margin-top:16px;padding:14px 18px;
+            border-radius:12px;font-size:.9rem;line-height:1.6;
+            display:none;
+        }
+        .quiz-result.show { display:block; animation:riseIn .4s both; }
+        .quiz-result.ok { background:rgba(0,255,100,.07);border:1px solid rgba(0,255,100,.25);color:#b0ffd0; }
+        .quiz-result.nope { background:rgba(255,180,50,.07);border:1px solid rgba(255,180,50,.25);color:#ffe4a0; }
+
+        /* ─── APPLICATIONS ─── */
+        .apps-grid {
+            display:grid;grid-template-columns:repeat(2,1fr);gap:12px;
+            animation:riseIn 1s .8s cubic-bezier(.16,1,.3,1) both;
+            margin-bottom:32px;
+        }
+        .app-tag {
+            background:var(--panel);
+            border:1px solid var(--blue-border);
+            border-radius:12px;padding:12px 16px;
+            display:flex;align-items:center;gap:10px;
+            font-size:.85rem;color:var(--white);
+            transition:all .2s;
+        }
+        .app-tag:hover { background:var(--blue-dim);border-color:rgba(0,200,255,.5); }
+        .app-tag span:first-child { font-size:1.2rem; }
+
+        /* ─── FOOTER CELEBRATE ─── */
+        .finish {
+            text-align:center;
+            animation:riseIn 1s .9s cubic-bezier(.16,1,.3,1) both;
+        }
+        .finish-emoji {
+            font-size:2.2rem;letter-spacing:.15em;
+            display:block;margin-bottom:16px;
+            animation:floatE 3s ease-in-out infinite;
+        }
+        @keyframes floatE{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+        .finish h2 {
+            font-family:'Syne',sans-serif;font-weight:800;
+            font-size:1.5rem;margin-bottom:10px;color:#fff;
+        }
+        .finish p { color:var(--muted);font-size:.9rem;line-height:1.7; }
+
+        /* ─── LIGHTNING LINE ─── */
+        .divider {
+            height:1px;
+            background:linear-gradient(90deg,transparent,var(--blue-border),transparent);
+            margin:36px 0;
         }
     </style>
 </head>
 <body>
+    <div class="bg-grid"></div>
+    <div class="bg-glow bg-glow-1"></div>
+    <div class="bg-glow bg-glow-2"></div>
+    <div class="bg-glow bg-glow-3"></div>
+    <canvas id="sparks"></canvas>
 
-    <div class="card">
-        <div class="image-container">
-            <img src="https://cdn.discordapp.com/attachments/1474483218651676883/1485723429847040140/Klatka-Faradaya---Faraday-Cage.png?ex=69c2e745&is=69c195c5&hm=e3b430e969ad2331ac49c0665f8a3d0440ae1b34447b05719ef42563e534f633&" 
-                 alt="Klatka Faradaya">
+    <div class="page">
+
+        <!-- HERO -->
+        <div class="hero">
+            <div class="badge">
+                <div class="badge-dot"></div>
+                Eksperyment zakończony sukcesem
+            </div>
+            <h1>Gratulacje!<br><em>Odkryliście Klatkę Faradaya!</em></h1>
+            <p class="hero-sub">
+                Dzięki Waszej spostrzegawczości i pracy zespołowej badacz może kontynuować swój eksperyment. Urządzenia są bezpieczne — pole elektromagnetyczne nie ma tu wstępu!
+            </p>
         </div>
 
-        <h1>Gratulacje! Udało Wam się!</h1>
-        
-        <p>
-            Znaleźliście klatkę Faradaya! Dzięki waszej pomocy będzie on mógł kontynuować swój eksperyment!
-        </p>
-        
-        <span class="emoji">🦾 🚀</span>
+        <!-- IMAGE -->
+        <div class="img-wrap">
+            <img src="https://cdn.discordapp.com/attachments/1474483218651676883/1485723429847040140/Klatka-Faradaya---Faraday-Cage.png?ex=69c2e745&is=69c195c5&hm=e3b430e969ad2331ac49c0665f8a3d0440ae1b34447b05719ef42563e534f633&" alt="Klatka Faradaya">
+            <div class="img-scanlines"></div>
+            <div class="img-gradient"></div>
+            <div class="img-label">Klatka Faradaya — model laboratoryjny</div>
+        </div>
+
+        <!-- STATS -->
+        <div class="section-label">Liczby nie kłamią</div>
+        <div class="stats">
+            <div class="stat">
+                <span class="stat-val">1836</span>
+                <span class="stat-lbl">Rok wynalazku</span>
+            </div>
+            <div class="stat">
+                <span class="stat-val">0 V/m</span>
+                <span class="stat-lbl">Pole w środku</span>
+            </div>
+            <div class="stat">
+                <span class="stat-val">∞</span>
+                <span class="stat-lbl">Zastosowań</span>
+            </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- EDUKACJA -->
+        <div class="section-label">Jak to działa?</div>
+        <div class="edu-grid">
+            <div class="edu-card">
+                <div class="edu-icon">⚡</div>
+                <div class="edu-body">
+                    <h3>Co to jest Klatka Faradaya?</h3>
+                    <p>To powłoka lub siatka z <strong>przewodzącego metalu</strong>, która blokuje zewnętrzne pola elektromagnetyczne. Wewnątrz panuje cisza elektromagnetyczna — żadne sygnały nie mogą ani wejść, ani wyjść.</p>
+                </div>
+            </div>
+            <div class="edu-card">
+                <div class="edu-icon">🔬</div>
+                <div class="edu-body">
+                    <h3>Skąd pochodzi nazwa?</h3>
+                    <p>Od <strong>Michaela Faradaya (1791–1867)</strong> — angielskiego fizyka i chemika, który nie ukończył nawet szkoły średniej, a stał się jednym z największych naukowców w historii. W 1836 r. odkrył, że metalowe powłoki pochłaniają ładunki elektrostatyczne.</p>
+                </div>
+            </div>
+            <div class="edu-card">
+                <div class="edu-icon">🧲</div>
+                <div class="edu-body">
+                    <h3>Jak to możliwe?</h3>
+                    <p>Gdy zewnętrzne pole elektromagnetyczne uderza w metal, <strong>swobodne elektrony</strong> w siatce przesuwają się i tworzą własne pole — dokładnie równoważące pole zewnętrzne. Efekt jest błyskawiczny i niemal idealny.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- QUIZ -->
+        <div class="section-label">Szybki test wiedzy</div>
+        <div class="quiz-wrap">
+            <div class="quiz-q">⚡ Gdzie <span>MOŻESZ</span> spotkać Klatkę Faradaya na co dzień?</div>
+            <div class="quiz-options" id="quiz">
+                <button class="quiz-btn" onclick="answer(this, false)"><span class="opt-key">A</span> W drewnianym płocie</button>
+                <button class="quiz-btn" onclick="answer(this, true)"><span class="opt-key">B</span> W mikrofalówce kuchennej</button>
+                <button class="quiz-btn" onclick="answer(this, false)"><span class="opt-key">C</span> W plastikowej butelce</button>
+                <button class="quiz-btn" onclick="answer(this, true)"><span class="opt-key">D</span> W samochodzie podczas burzy</button>
+            </div>
+            <div class="quiz-result ok" id="res-ok">
+                ✅ <strong>Dobrze!</strong> Mikrofalówka ma metalową siatkę w drzwiczkach — bez niej promieniowanie uciekałoby na zewnątrz. Samochód podczas burzy to klasyczny przykład: metalowe poszycie tworzy naturalną klatkę, chroniąc pasażerów przed piorunem.
+            </div>
+            <div class="quiz-result nope" id="res-nope">
+                💡 <strong>Prawie!</strong> Drewno i plastik nie przewodzą prądu — nie mogą tworzyć klatki Faradaya. Spróbuj jeszcze raz!
+            </div>
+        </div>
+
+        <!-- ZASTOSOWANIA -->
+        <div class="section-label">Gdzie działa klatka Faradaya?</div>
+        <div class="apps-grid">
+            <div class="app-tag"><span>📱</span> Ekranowanie telefonów komórkowych</div>
+            <div class="app-tag"><span>🔥</span> Metalowe drzwiczki mikrofalówki</div>
+            <div class="app-tag"><span>🚗</span> Nadwozie auta — ochrona przed piorunem</div>
+            <div class="app-tag"><span>🏥</span> Sale operacyjne (brak zakłóceń RF)</div>
+            <div class="app-tag"><span>🛡️</span> Bunkry wojskowe (ochrona EMP)</div>
+            <div class="app-tag"><span>🧪</span> Laboratoria badawcze</div>
+            <div class="app-tag"><span>💳</span> Etui blokujące RFID</div>
+            <div class="app-tag"><span>🛰️</span> Osłony elektroniki kosmicznej</div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- FINISH -->
+        <div class="finish">
+            <span class="finish-emoji">🦾 ⚡ 🚀 ⚡ 🦾</span>
+            <h2>Niesamowita robota, detektywi!</h2>
+            <p>Właśnie dowiedzieliście się czegoś, co fizycy odkryli prawie 200 lat temu — i co otacza Was każdego dnia. Nauka jest wszędzie. Wystarczy tylko wiedzieć, gdzie patrzeć.</p>
+        </div>
+
     </div>
 
+    <script>
+        /* ── SPARKS / LIGHTNING ── */
+        const canvas = document.getElementById('sparks');
+        const ctx = canvas.getContext('2d');
+
+        function resize() { canvas.width = innerWidth; canvas.height = innerHeight; }
+        resize(); window.addEventListener('resize', resize);
+
+        const rand = (a, b) => Math.random() * (b - a) + a;
+
+        function bolt(x1, y1, x2, y2, rough, depth) {
+            if (depth <= 0) return;
+            const mx = (x1 + x2) / 2 + rand(-rough, rough);
+            const my = (y1 + y2) / 2 + rand(-rough, rough);
+            ctx.beginPath();
+            ctx.moveTo(x1, y1); ctx.lineTo(mx, my); ctx.lineTo(x2, y2);
+            ctx.strokeStyle = `rgba(0,210,255,${rand(.2, .7)})`;
+            ctx.lineWidth = rand(.3, depth * .5);
+            ctx.shadowColor = '#00c8ff'; ctx.shadowBlur = 10;
+            ctx.stroke();
+            if (Math.random() > .7) bolt(mx, my, mx + rand(-80,80), my + rand(40,180), rough * .6, depth - 1);
+            bolt(x1, y1, mx, my, rough * .6, depth - 1);
+            bolt(mx, my, x2, y2, rough * .6, depth - 1);
+        }
+
+        function flash() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            const x = rand(0, canvas.width);
+            bolt(x, 0, x + rand(-120, 120), canvas.height, rand(50, 110), 4);
+            setTimeout(() => ctx.clearRect(0, 0, canvas.width, canvas.height), rand(50, 110));
+        }
+
+        function next() { flash(); setTimeout(next, rand(2000, 5000)); }
+        setTimeout(next, 1200);
+
+        /* ── QUIZ ── */
+        let answered = false;
+        function answer(btn, correct) {
+            if (answered) return;
+            answered = true;
+            const btns = document.querySelectorAll('.quiz-btn');
+            btns.forEach(b => {
+                b.style.pointerEvents = 'none';
+                b.style.opacity = '.55';
+            });
+            btn.style.opacity = '1';
+            if (correct) {
+                btn.classList.add('correct');
+                document.getElementById('res-ok').classList.add('show');
+            } else {
+                btn.classList.add('wrong');
+                document.getElementById('res-nope').classList.add('show');
+                // allow retry after 1.5s
+                setTimeout(() => {
+                    answered = false;
+                    btns.forEach(b => {
+                        b.style.pointerEvents = '';
+                        b.style.opacity = '1';
+                        b.classList.remove('wrong');
+                    });
+                    document.getElementById('res-nope').classList.remove('show');
+                }, 1600);
+            }
+        }
+    </script>
 </body>
 </html>
