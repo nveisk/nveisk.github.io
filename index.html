@@ -1,1300 +1,363 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>mcextreme.pl – Nauka Cheatów</title>
-<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --bg: #07090f;
-    --bg2: #0d1120;
-    --bg3: #111828;
-    --accent: #00e5ff;
-    --accent2: #ff2d55;
-    --accent3: #ffe600;
-    --text: #e8eaf6;
-    --muted: #6b7a99;
-    --card: #0f1629;
-    --border: rgba(0,229,255,0.15);
-    --glow: 0 0 20px rgba(0,229,255,0.4);
-    --glow2: 0 0 20px rgba(255,45,85,0.4);
-  }
-
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-  html { scroll-behavior: smooth; }
-
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 17px;
-    line-height: 1.6;
-    overflow-x: hidden;
-  }
-
-  /* SCANLINE OVERLAY */
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background: repeating-linear-gradient(
-      0deg,
-      transparent,
-      transparent 2px,
-      rgba(0,0,0,0.04) 2px,
-      rgba(0,0,0,0.04) 4px
-    );
-    pointer-events: none;
-    z-index: 9999;
-  }
-
-  /* GRID BACKGROUND */
-  .grid-bg {
-    position: fixed;
-    inset: 0;
-    background-image:
-      linear-gradient(rgba(0,229,255,0.03) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(0,229,255,0.03) 1px, transparent 1px);
-    background-size: 60px 60px;
-    pointer-events: none;
-    z-index: 0;
-  }
-
-  /* NAV */
-  nav {
-    position: fixed;
-    top: 0; left: 0; right: 0;
-    z-index: 100;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 40px;
-    height: 64px;
-    background: rgba(7,9,15,0.92);
-    backdrop-filter: blur(12px);
-    border-bottom: 1px solid var(--border);
-  }
-
-  .nav-logo {
-    font-family: 'Orbitron', sans-serif;
-    font-weight: 900;
-    font-size: 20px;
-    letter-spacing: 0.05em;
-    color: var(--accent);
-    text-shadow: var(--glow);
-    text-decoration: none;
-  }
-
-  .nav-logo span { color: var(--accent2); }
-
-  .nav-links {
-    display: flex;
-    gap: 32px;
-    list-style: none;
-  }
-
-  .nav-links a {
-    color: var(--muted);
-    text-decoration: none;
-    font-weight: 600;
-    font-size: 14px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    transition: color 0.2s;
-  }
-
-  .nav-links a:hover { color: var(--accent); }
-
-  .nav-cta {
-    background: var(--accent2);
-    color: #fff !important;
-    padding: 8px 20px;
-    border-radius: 3px;
-    font-weight: 700 !important;
-    letter-spacing: 0.08em !important;
-    transition: box-shadow 0.2s, transform 0.2s !important;
-  }
-  .nav-cta:hover { box-shadow: var(--glow2) !important; transform: translateY(-1px); }
-
-  /* HERO */
-  .hero {
-    position: relative;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding: 120px 24px 80px;
-    overflow: hidden;
-    z-index: 1;
-  }
-
-  .hero-glow-1 {
-    position: absolute;
-    width: 700px; height: 700px;
-    background: radial-gradient(circle, rgba(0,229,255,0.08) 0%, transparent 70%);
-    top: -200px; left: -200px;
-    pointer-events: none;
-    animation: pulse1 6s ease-in-out infinite;
-  }
-
-  .hero-glow-2 {
-    position: absolute;
-    width: 600px; height: 600px;
-    background: radial-gradient(circle, rgba(255,45,85,0.08) 0%, transparent 70%);
-    bottom: -100px; right: -100px;
-    pointer-events: none;
-    animation: pulse2 8s ease-in-out infinite;
-  }
-
-  @keyframes pulse1 { 0%,100%{opacity:1} 50%{opacity:0.5} }
-  @keyframes pulse2 { 0%,100%{opacity:0.5} 50%{opacity:1} }
-
-  .badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    background: rgba(0,229,255,0.08);
-    border: 1px solid rgba(0,229,255,0.3);
-    color: var(--accent);
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 12px;
-    letter-spacing: 0.15em;
-    padding: 6px 16px;
-    border-radius: 2px;
-    margin-bottom: 28px;
-    animation: fadeDown 0.6s ease both;
-  }
-
-  .badge::before {
-    content: '';
-    width: 6px; height: 6px;
-    background: var(--accent);
-    border-radius: 50%;
-    box-shadow: 0 0 8px var(--accent);
-    animation: blink 1.2s step-end infinite;
-  }
-  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
-
-  .hero h1 {
-    font-family: 'Orbitron', sans-serif;
-    font-weight: 900;
-    font-size: clamp(36px, 7vw, 80px);
-    line-height: 1.05;
-    letter-spacing: -0.02em;
-    margin-bottom: 24px;
-    animation: fadeDown 0.7s 0.1s ease both;
-  }
-
-  .hero h1 .line1 { display: block; color: var(--text); }
-  .hero h1 .line2 {
-    display: block;
-    background: linear-gradient(90deg, var(--accent), var(--accent2));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-
-  .hero p {
-    font-size: clamp(16px, 2vw, 20px);
-    color: var(--muted);
-    max-width: 560px;
-    margin-bottom: 40px;
-    animation: fadeDown 0.7s 0.2s ease both;
-  }
-
-  .hero-btns {
-    display: flex;
-    gap: 16px;
-    flex-wrap: wrap;
-    justify-content: center;
-    animation: fadeDown 0.7s 0.3s ease both;
-  }
-
-  .btn-primary {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    background: var(--accent);
-    color: #07090f;
-    font-family: 'Orbitron', sans-serif;
-    font-weight: 700;
-    font-size: 14px;
-    letter-spacing: 0.08em;
-    padding: 14px 32px;
-    border-radius: 3px;
-    text-decoration: none;
-    transition: box-shadow 0.2s, transform 0.2s;
-    cursor: pointer;
-    border: none;
-  }
-  .btn-primary:hover { box-shadow: var(--glow); transform: translateY(-2px); }
-
-  .btn-secondary {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    background: transparent;
-    color: var(--text);
-    font-family: 'Orbitron', sans-serif;
-    font-weight: 700;
-    font-size: 14px;
-    letter-spacing: 0.08em;
-    padding: 13px 32px;
-    border-radius: 3px;
-    border: 1px solid var(--border);
-    text-decoration: none;
-    transition: border-color 0.2s, color 0.2s, transform 0.2s;
-    cursor: pointer;
-  }
-  .btn-secondary:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-2px); }
-
-  .hero-stats {
-    display: flex;
-    gap: 48px;
-    margin-top: 72px;
-    flex-wrap: wrap;
-    justify-content: center;
-    animation: fadeDown 0.7s 0.4s ease both;
-  }
-
-  .stat { text-align: center; }
-  .stat-val {
-    font-family: 'Orbitron', sans-serif;
-    font-weight: 900;
-    font-size: 32px;
-    color: var(--accent);
-    text-shadow: var(--glow);
-    display: block;
-  }
-  .stat-label {
-    font-size: 13px;
-    color: var(--muted);
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-  }
-
-  @keyframes fadeDown {
-    from { opacity:0; transform: translateY(-16px); }
-    to { opacity:1; transform: translateY(0); }
-  }
-
-  /* SECTIONS */
-  section { position: relative; z-index: 1; }
-
-  .section-pad { padding: 96px 24px; }
-
-  .container { max-width: 1100px; margin: 0 auto; }
-
-  .section-label {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 12px;
-    letter-spacing: 0.2em;
-    color: var(--accent);
-    text-transform: uppercase;
-    margin-bottom: 12px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-  .section-label::after { content:''; flex:1; height:1px; background: var(--border); }
-
-  .section-title {
-    font-family: 'Orbitron', sans-serif;
-    font-weight: 900;
-    font-size: clamp(26px, 4vw, 42px);
-    margin-bottom: 16px;
-    line-height: 1.15;
-  }
-
-  .section-sub {
-    color: var(--muted);
-    font-size: 17px;
-    max-width: 560px;
-    margin-bottom: 56px;
-  }
-
-  /* COURSE MODULES */
-  .modules-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
-    gap: 20px;
-  }
-
-  .module-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    padding: 28px;
-    position: relative;
-    overflow: hidden;
-    transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s;
-    cursor: pointer;
-  }
-
-  .module-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 2px;
-    background: linear-gradient(90deg, var(--accent), transparent);
-    opacity: 0;
-    transition: opacity 0.3s;
-  }
-
-  .module-card:hover {
-    border-color: rgba(0,229,255,0.4);
-    transform: translateY(-4px);
-    box-shadow: 0 12px 40px rgba(0,0,0,0.4), var(--glow);
-  }
-  .module-card:hover::before { opacity: 1; }
-
-  .module-num {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 11px;
-    color: var(--accent2);
-    letter-spacing: 0.15em;
-    margin-bottom: 12px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .module-num::after { content:''; flex:1; height:1px; background: rgba(255,45,85,0.2); }
-
-  .module-icon {
-    font-size: 32px;
-    margin-bottom: 16px;
-    display: block;
-  }
-
-  .module-title {
-    font-family: 'Orbitron', sans-serif;
-    font-weight: 700;
-    font-size: 16px;
-    margin-bottom: 10px;
-    color: var(--text);
-  }
-
-  .module-desc {
-    font-size: 14px;
-    color: var(--muted);
-    line-height: 1.7;
-    margin-bottom: 20px;
-  }
-
-  .module-tags {
-    display: flex;
-    gap: 6px;
-    flex-wrap: wrap;
-  }
-
-  .tag {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 0.08em;
-    padding: 3px 9px;
-    border-radius: 2px;
-    background: rgba(0,229,255,0.06);
-    border: 1px solid rgba(0,229,255,0.15);
-    color: var(--accent);
-  }
-
-  .tag.red {
-    background: rgba(255,45,85,0.06);
-    border-color: rgba(255,45,85,0.2);
-    color: var(--accent2);
-  }
-
-  .tag.yellow {
-    background: rgba(255,230,0,0.06);
-    border-color: rgba(255,230,0,0.2);
-    color: var(--accent3);
-  }
-
-  /* FEATURE STRIP */
-  .features-strip {
-    background: var(--bg2);
-    border-top: 1px solid var(--border);
-    border-bottom: 1px solid var(--border);
-    padding: 60px 24px;
-  }
-
-  .features-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: 40px;
-  }
-
-  .feature {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  .feature-icon {
-    width: 44px; height: 44px;
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 20px;
-    background: rgba(0,229,255,0.04);
-    margin-bottom: 4px;
-  }
-
-  .feature h3 {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 14px;
-    font-weight: 700;
-    color: var(--text);
-  }
-
-  .feature p { font-size: 14px; color: var(--muted); line-height: 1.6; }
-
-  /* VIDEO DEMO */
-  .video-section {
-    padding: 96px 24px;
-  }
-
-  .video-wrap {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 60px;
-    align-items: center;
-  }
-
-  @media(max-width:768px){ .video-wrap{ grid-template-columns:1fr; } }
-
-  .video-placeholder {
-    background: var(--bg3);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    aspect-ratio: 16/9;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 16px;
-    position: relative;
-    overflow: hidden;
-    cursor: pointer;
-    transition: border-color 0.3s;
-  }
-
-  .video-placeholder:hover { border-color: rgba(0,229,255,0.5); }
-
-  .video-placeholder::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(135deg, rgba(0,229,255,0.05), rgba(255,45,85,0.05));
-  }
-
-  .play-btn {
-    width: 64px; height: 64px;
-    background: var(--accent);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    box-shadow: var(--glow);
-    transition: transform 0.2s;
-  }
-  .video-placeholder:hover .play-btn { transform: scale(1.1); }
-
-  .play-btn::after {
-    content: '';
-    width: 0; height: 0;
-    border-style: solid;
-    border-width: 11px 0 11px 20px;
-    border-color: transparent transparent transparent #07090f;
-    margin-left: 4px;
-  }
-
-  .video-label {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 12px;
-    color: var(--muted);
-    letter-spacing: 0.1em;
-    position: relative;
-  }
-
-  .video-info h2 {
-    font-family: 'Orbitron', sans-serif;
-    font-weight: 900;
-    font-size: clamp(22px, 3vw, 34px);
-    margin-bottom: 16px;
-  }
-
-  .video-info p {
-    color: var(--muted);
-    font-size: 16px;
-    line-height: 1.8;
-    margin-bottom: 24px;
-  }
-
-  .check-list {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    margin-bottom: 32px;
-  }
-
-  .check-list li {
-    display: flex;
-    align-items: flex-start;
-    gap: 12px;
-    font-size: 15px;
-    color: var(--text);
-  }
-
-  .check-list li::before {
-    content: '▶';
-    color: var(--accent);
-    font-size: 10px;
-    margin-top: 4px;
-    flex-shrink: 0;
-    text-shadow: var(--glow);
-  }
-
-  /* PRICING */
-  .pricing-section { padding: 96px 24px; background: var(--bg2); border-top: 1px solid var(--border); }
-
-  .pricing-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 24px;
-    max-width: 900px;
-    margin: 0 auto;
-  }
-
-  .price-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    padding: 36px 28px;
-    position: relative;
-    transition: transform 0.25s, box-shadow 0.25s;
-  }
-  .price-card:hover { transform: translateY(-6px); box-shadow: 0 20px 60px rgba(0,0,0,0.5); }
-
-  .price-card.featured {
-    border-color: var(--accent);
-    box-shadow: var(--glow);
-  }
-
-  .price-card.featured::before {
-    content: 'POPULARNE';
-    position: absolute;
-    top: -12px; left: 50%; transform: translateX(-50%);
-    background: var(--accent);
-    color: #07090f;
-    font-family: 'Orbitron', sans-serif;
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 0.15em;
-    padding: 3px 14px;
-    border-radius: 2px;
-  }
-
-  .price-name {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 13px;
-    font-weight: 700;
-    color: var(--muted);
-    letter-spacing: 0.15em;
-    margin-bottom: 20px;
-  }
-
-  .price-val {
-    font-family: 'Orbitron', sans-serif;
-    font-weight: 900;
-    font-size: 48px;
-    color: var(--text);
-    margin-bottom: 4px;
-  }
-  .price-val span { font-size: 20px; color: var(--muted); vertical-align: super; font-weight: 400; }
-
-  .price-period { font-size: 13px; color: var(--muted); margin-bottom: 28px; }
-
-  .price-features {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-bottom: 32px;
-  }
-
-  .price-features li {
-    font-size: 14px;
-    color: var(--text);
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-
-  .price-features li::before { content: '✓'; color: var(--accent); font-weight: 700; }
-  .price-features li.off { color: var(--muted); }
-  .price-features li.off::before { content: '✗'; color: var(--muted); }
-
-  /* TERMINAL / CODE BLOCK */
-  .terminal-section { padding: 80px 24px; }
-
-  .terminal {
-    background: #050709;
-    border: 1px solid rgba(0,229,255,0.2);
-    border-radius: 6px;
-    overflow: hidden;
-    max-width: 780px;
-    margin: 0 auto;
-    box-shadow: 0 0 60px rgba(0,229,255,0.05);
-  }
-
-  .terminal-bar {
-    background: #0a0d14;
-    padding: 10px 16px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    border-bottom: 1px solid rgba(0,229,255,0.1);
-  }
-
-  .dot { width:12px; height:12px; border-radius:50%; }
-  .dot.r{background:#ff5f56} .dot.y{background:#ffbd2e} .dot.g{background:#27c93f}
-
-  .terminal-title {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 12px;
-    color: var(--muted);
-    margin-left: 8px;
-  }
-
-  .terminal-body {
-    padding: 24px;
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 13px;
-    line-height: 2;
-    color: #7eeb8f;
-  }
-
-  .t-prompt { color: var(--accent); }
-  .t-cmd { color: #e8eaf6; }
-  .t-comment { color: var(--muted); }
-  .t-warn { color: var(--accent2); }
-  .t-ok { color: #27c93f; }
-  .t-yellow { color: var(--accent3); }
-  .t-blink { animation: blink 1s step-end infinite; }
-
-  /* TESTIMONIALS */
-  .reviews-section { padding: 96px 24px; }
-  .reviews-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 20px;
-  }
-
-  .review-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    padding: 28px;
-    transition: border-color 0.3s, transform 0.3s;
-  }
-  .review-card:hover { border-color: rgba(0,229,255,0.3); transform: translateY(-3px); }
-
-  .review-stars { color: var(--accent3); font-size: 14px; margin-bottom: 14px; letter-spacing: 2px; }
-
-  .review-text {
-    font-size: 15px;
-    color: var(--text);
-    line-height: 1.7;
-    margin-bottom: 20px;
-    font-style: italic;
-  }
-
-  .reviewer {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-
-  .reviewer-avatar {
-    width: 36px; height: 36px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, var(--accent), var(--accent2));
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 700;
-    font-size: 14px;
-    color: #07090f;
-    font-family: 'Orbitron', sans-serif;
-    flex-shrink: 0;
-  }
-
-  .reviewer-name { font-weight: 600; font-size: 14px; color: var(--text); }
-  .reviewer-tag { font-family: 'Share Tech Mono', monospace; font-size: 11px; color: var(--muted); }
-
-  /* FAQ */
-  .faq-section { padding: 96px 24px; background: var(--bg2); border-top: 1px solid var(--border); }
-  .faq-list { max-width: 720px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; }
-
-  .faq-item {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    overflow: hidden;
-  }
-
-  .faq-q {
-    padding: 20px 24px;
-    font-family: 'Rajdhani', sans-serif;
-    font-weight: 600;
-    font-size: 16px;
-    cursor: pointer;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    user-select: none;
-    transition: color 0.2s;
-  }
-  .faq-q:hover { color: var(--accent); }
-
-  .faq-q .arrow {
-    color: var(--accent);
-    font-size: 12px;
-    transition: transform 0.3s;
-    flex-shrink: 0;
-  }
-
-  .faq-a {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.4s ease, padding 0.3s;
-    font-size: 15px;
-    color: var(--muted);
-    line-height: 1.7;
-    padding: 0 24px;
-  }
-  .faq-item.open .faq-a { max-height: 200px; padding: 0 24px 20px; }
-  .faq-item.open .arrow { transform: rotate(90deg); }
-
-  /* CTA BANNER */
-  .cta-banner {
-    padding: 100px 24px;
-    text-align: center;
-    background: radial-gradient(ellipse at center, rgba(0,229,255,0.06) 0%, transparent 70%);
-    border-top: 1px solid var(--border);
-  }
-
-  .cta-banner h2 {
-    font-family: 'Orbitron', sans-serif;
-    font-weight: 900;
-    font-size: clamp(28px, 5vw, 52px);
-    margin-bottom: 16px;
-  }
-  .cta-banner p { color: var(--muted); font-size: 18px; margin-bottom: 40px; }
-
-  /* FOOTER */
-  footer {
-    background: var(--bg);
-    border-top: 1px solid var(--border);
-    padding: 48px 24px 32px;
-    position: relative;
-    z-index: 1;
-  }
-
-  .footer-inner {
-    max-width: 1100px;
-    margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-    gap: 32px;
-  }
-
-  .footer-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    flex-wrap: wrap;
-    gap: 32px;
-  }
-
-  .footer-brand p { font-size: 14px; color: var(--muted); max-width: 260px; margin-top: 10px; line-height: 1.7; }
-
-  .footer-col h4 {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.15em;
-    color: var(--muted);
-    margin-bottom: 16px;
-  }
-  .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 8px; }
-  .footer-col a { color: var(--muted); text-decoration: none; font-size: 14px; transition: color 0.2s; }
-  .footer-col a:hover { color: var(--accent); }
-
-  .footer-bottom {
-    border-top: 1px solid var(--border);
-    padding-top: 24px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 12px;
-  }
-  .footer-bottom p { font-size: 13px; color: var(--muted); }
-
-  /* UTILS */
-  .text-accent { color: var(--accent); }
-  .text-red { color: var(--accent2); }
-
-  /* SCROLL REVEAL */
-  .reveal {
-    opacity: 0;
-    transform: translateY(24px);
-    transition: opacity 0.6s ease, transform 0.6s ease;
-  }
-  .reveal.visible {
-    opacity: 1;
-    transform: none;
-  }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Polityka Prywatności - KOI BOT</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            font-family: 'Segoe UI', 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.8;
+            color: #2d3748;
+            background: #ffffff;
+            font-size: 16px;
+        }
+        
+        /* Header */
+        header {
+            background: linear-gradient(135deg, #00d4ff 0%, #0099cc 50%, #0066aa 100%);
+            color: white;
+            padding: 80px 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='rgba(255,255,255,0.05)' fill-rule='nonzero'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            opacity: 0.1;
+        }
+        
+        header h1 {
+            font-size: 3.5em;
+            font-weight: 800;
+            margin-bottom: 15px;
+            position: relative;
+            z-index: 1;
+            letter-spacing: -1px;
+        }
+        
+        header .subtitle {
+            font-size: 1.3em;
+            font-weight: 300;
+            opacity: 0.95;
+            position: relative;
+            z-index: 1;
+            letter-spacing: 0.5px;
+        }
+        
+        /* Navigation */
+        nav {
+            background: #f7f9fc;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            gap: 0;
+            border-bottom: 1px solid #e2e8f0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        
+        nav a {
+            color: #2d3748;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 18px 35px;
+            font-size: 0.95em;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+            display: inline-block;
+        }
+        
+        nav a:hover {
+            background: #edf2f7;
+            color: #00d4ff;
+            border-bottom-color: #00d4ff;
+        }
+        
+        nav a.active {
+            background: #e6f7ff;
+            color: #0066aa;
+            border-bottom-color: #0066aa;
+        }
+        
+        /* Container */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 60px 40px;
+        }
+        
+        /* Sections */
+        .legal-section {
+            margin-bottom: 50px;
+        }
+        
+        .legal-section h2 {
+            font-size: 2em;
+            color: #0066aa;
+            margin-bottom: 25px;
+            font-weight: 700;
+            border-bottom: 3px solid #00d4ff;
+            padding-bottom: 15px;
+        }
+        
+        .legal-section h3 {
+            font-size: 1.3em;
+            color: #2d3748;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        
+        .legal-section p {
+            margin-bottom: 18px;
+            line-height: 1.9;
+            color: #4a5568;
+            font-size: 1em;
+        }
+        
+        .legal-section ul, 
+        .legal-section ol {
+            margin-left: 25px;
+            margin-bottom: 20px;
+        }
+        
+        .legal-section li {
+            margin-bottom: 12px;
+            color: #4a5568;
+            line-height: 1.8;
+        }
+        
+        /* Info Boxes */
+        .highlight-box {
+            background: linear-gradient(135deg, #e6f7ff 0%, #cce5ff 100%);
+            border-left: 5px solid #00d4ff;
+            padding: 25px;
+            margin: 30px 0;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 179, 204, 0.1);
+        }
+        
+        .highlight-box strong {
+            color: #0066aa;
+            font-weight: 700;
+        }
+        
+        .highlight-box ul {
+            margin-top: 15px;
+        }
+        
+        .brand-box {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2ff 100%);
+            border-left: 5px solid #0099cc;
+            padding: 30px;
+            margin: 30px 0;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 153, 204, 0.1);
+        }
+        
+        .brand-box strong {
+            color: #0066aa;
+            font-size: 1.1em;
+            display: block;
+            margin-bottom: 10px;
+        }
+        
+        .brand-box p {
+            margin: 8px 0;
+            color: #2d3748;
+            line-height: 1.8;
+        }
+        
+        /* Footer */
+        footer {
+            background: linear-gradient(135deg, #00d4ff 0%, #0099cc 50%, #0066aa 100%);
+            color: white;
+            text-align: center;
+            padding: 40px;
+            font-size: 0.95em;
+            font-weight: 500;
+            margin-top: 60px;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            header {
+                padding: 50px 25px;
+            }
+            
+            header h1 {
+                font-size: 2.3em;
+            }
+            
+            header .subtitle {
+                font-size: 1.1em;
+            }
+            
+            .container {
+                padding: 40px 20px;
+            }
+            
+            nav {
+                flex-wrap: wrap;
+            }
+            
+            nav a {
+                padding: 15px 20px;
+                font-size: 0.9em;
+                flex: 1;
+                text-align: center;
+            }
+            
+            .legal-section h2 {
+                font-size: 1.6em;
+            }
+            
+            .legal-section h3 {
+                font-size: 1.1em;
+            }
+        }
+    </style>
 </head>
 <body>
-
-<div class="grid-bg"></div>
-
-<!-- NAV -->
-<nav>
-  <a href="#" class="nav-logo">mc<span>extreme</span>.pl</a>
-  <ul class="nav-links">
-    <li><a href="#modules">Moduły</a></li>
-    <li><a href="#video">Demo</a></li>
-    <li><a href="#pricing">Cennik</a></li>
-    <li><a href="#faq">FAQ</a></li>
-    <li><a href="#pricing" class="nav-cta">Zacznij teraz</a></li>
-  </ul>
-</nav>
-
-<!-- HERO -->
-<section class="hero">
-  <div class="hero-glow-1"></div>
-  <div class="hero-glow-2"></div>
-  <div class="badge">PLATFORMA EDUKACYJNA · v2.4</div>
-  <h1>
-    <span class="line1">Naucz się</span>
-    <span class="line2">Wykrywać Cheaty</span>
-  </h1>
-  <p>Kompleksowy kurs dla adminów, właścicieli serwerów i graczy. Rozpoznaj każdy cheat, zanim wyrządzi szkodę.</p>
-  <div class="hero-btns">
-    <a href="#modules" class="btn-primary">▶ Przeglądaj kurs</a>
-    <a href="#video" class="btn-secondary">▷ Obejrzyj demo</a>
-  </div>
-  <div class="hero-stats">
-    <div class="stat"><span class="stat-val">120+</span><span class="stat-label">Lekcji wideo</span></div>
-    <div class="stat"><span class="stat-val">18</span><span class="stat-label">Modułów</span></div>
-    <div class="stat"><span class="stat-val">4,200+</span><span class="stat-label">Uczniów</span></div>
-    <div class="stat"><span class="stat-val">98%</span><span class="stat-label">Zadowolonych</span></div>
-  </div>
-</section>
-
-<!-- FEATURES STRIP -->
-<div class="features-strip">
-  <div class="container">
-    <div class="features-grid">
-      <div class="feature reveal">
-        <div class="feature-icon">🎬</div>
-        <h3>Wideo HD</h3>
-        <p>Każda lekcja nagrana w pełnej jakości z komentarzem eksperta.</p>
-      </div>
-      <div class="feature reveal">
-        <div class="feature-icon">🔴</div>
-        <h3>Nagrania Live</h3>
-        <p>Rzeczywiste nagrania z gier z zaznaczonymi podejrzanymi zachowaniami.</p>
-      </div>
-      <div class="feature reveal">
-        <div class="feature-icon">📡</div>
-        <h3>Na bieżąco</h3>
-        <p>Treści aktualizowane co miesiąc — nowe cheaty, nowe techniki.</p>
-      </div>
-      <div class="feature reveal">
-        <div class="feature-icon">🏆</div>
-        <h3>Certyfikat</h3>
-        <p>Potwierdź swoje umiejętności certyfikatem ukończenia kursu.</p>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- MODULES -->
-<section class="section-pad" id="modules">
-  <div class="container">
-    <div class="section-label">Program kursu</div>
-    <h2 class="section-title">18 Modułów · 120 Lekcji</h2>
-    <p class="section-sub">Od podstaw aż po zaawansowane techniki analizy footage. Każdy moduł to konkretna wiedza.</p>
-    <div class="modules-grid">
-
-      <div class="module-card reveal">
-        <div class="module-num">MODUŁ 01</div>
-        <span class="module-icon">🔍</span>
-        <div class="module-title">Podstawy Detekcji</div>
-        <div class="module-desc">Zrozum mechanikę cheatów — jak działają, jak wpływają na fizykę gry i co zdradzają w nagraniu.</div>
-        <div class="module-tags"><span class="tag">PODSTAWOWY</span><span class="tag yellow">6 LEKCJI</span></div>
-      </div>
-
-      <div class="module-card reveal">
-        <div class="module-num">MODUŁ 02</div>
-        <span class="module-icon">🎯</span>
-        <div class="module-title">Aimbot — Rozpoznawanie</div>
-        <div class="module-desc">Naucz się odróżniać dobrą celność od aimbota. Analiza snapów, flicki i kąty obrotu głowy.</div>
-        <div class="module-tags"><span class="tag">POPULARNY</span><span class="tag red">AIMBOT</span><span class="tag yellow">9 LEKCJI</span></div>
-      </div>
-
-      <div class="module-card reveal">
-        <div class="module-num">MODUŁ 03</div>
-        <span class="module-icon">👁️</span>
-        <div class="module-title">Wallhack & ESP</div>
-        <div class="module-desc">Pre-aiming, pre-fire, nielogiczne decyzje — dowiedz się kiedy gracz "widzi przez ściany".</div>
-        <div class="module-tags"><span class="tag red">WALLHACK</span><span class="tag red">ESP</span><span class="tag yellow">8 LEKCJI</span></div>
-      </div>
-
-      <div class="module-card reveal">
-        <div class="module-num">MODUŁ 04</div>
-        <span class="module-icon">⚡</span>
-        <div class="module-title">Speedhack & NoClip</div>
-        <div class="module-desc">Analiza ruchu i animacji gracza. Jak rozpoznać nieprawidłową prędkość i teleportację.</div>
-        <div class="module-tags"><span class="tag">ZAAWANSOWANY</span><span class="tag yellow">5 LEKCJI</span></div>
-      </div>
-
-      <div class="module-card reveal">
-        <div class="module-num">MODUŁ 05</div>
-        <span class="module-icon">📊</span>
-        <div class="module-title">Statystyki i Wzorce</div>
-        <div class="module-desc">Kiedy stats mówią wszystko — analiza headshot%, accuracy per session, K/D ratio anomalie.</div>
-        <div class="module-tags"><span class="tag">ANALITYCZNY</span><span class="tag yellow">7 LEKCJI</span></div>
-      </div>
-
-      <div class="module-card reveal">
-        <div class="module-num">MODUŁ 06</div>
-        <span class="module-icon">🔧</span>
-        <div class="module-title">Anti-Cheat Deep Dive</div>
-        <div class="module-desc">Jak działają systemy VAC, EAC, BattlEye — i dlaczego nie wystarczą bez weryfikacji manualnej.</div>
-        <div class="module-tags"><span class="tag">TECHNICZNY</span><span class="tag yellow">6 LEKCJI</span></div>
-      </div>
-
-    </div>
-  </div>
-</section>
-
-<!-- TERMINAL -->
-<section class="terminal-section reveal" id="video">
-  <div class="container">
-    <div class="terminal">
-      <div class="terminal-bar">
-        <span class="dot r"></span>
-        <span class="dot y"></span>
-        <span class="dot g"></span>
-        <span class="terminal-title">mcextreme_analyzer.sh — bash</span>
-      </div>
-      <div class="terminal-body">
-        <div><span class="t-prompt">admin@mcextreme</span>:<span class="t-cmd">~</span>$ ./analyze_demo.sh --player suspicious_123</div>
-        <div class="t-comment"># Wczytywanie danych gracza...</div>
-        <div><span class="t-ok">[OK]</span> Sesja załadowana: 47 minut gameplay</div>
-        <div><span class="t-ok">[OK]</span> Wykryto 3 rundy do analizy</div>
-        <div>&nbsp;</div>
-        <div class="t-comment"># Analiza kątów celowania...</div>
-        <div><span class="t-warn">[WARN]</span> Średni kąt snapu: <span class="t-yellow">182°/s</span> — wartość ponadprzeciętna</div>
-        <div><span class="t-warn">[WARN]</span> Wykryto <span class="t-yellow">14</span> epizodów lock-on przez obiekty</div>
-        <div>&nbsp;</div>
-        <div class="t-comment"># Weryfikacja pre-fire...</div>
-        <div><span class="t-warn">[WARN]</span> Pre-aim przez ścianę: <span class="t-yellow">8/12</span> przypadków trafnych</div>
-        <div><span class="t-warn">[WARN]</span> Wskaźnik ESP: <span class="t-red t-warn">WYSOKI (89%)</span></div>
-        <div>&nbsp;</div>
-        <div class="t-comment"># Wynik końcowy:</div>
-        <div><span class="t-warn">[RESULT]</span> Rekomendacja: <span class="t-red t-warn">BAN — dowody niezbite</span></div>
-        <div><span class="t-prompt">admin@mcextreme</span>:<span class="t-cmd">~</span>$ <span class="t-blink">▮</span></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- VIDEO + INFO -->
-<section class="video-section">
-  <div class="container">
-    <div class="video-wrap">
-      <div class="video-placeholder reveal">
-        <div class="play-btn"></div>
-        <div class="video-label">PODGLĄD LEKCJI — AIMBOT ANALYSIS</div>
-      </div>
-      <div class="video-info reveal">
-        <div class="section-label">Demo lekcji</div>
-        <h2>Zobaczysz dokładnie to, <span class="text-accent">czego szukać</span></h2>
-        <p>Każda lekcja zawiera rzeczywiste nagrania z komentarzem. Żadnej teorii bez praktyki — tylko konkretne przypadki.</p>
-        <ul class="check-list">
-          <li>Analiza klatka po klatce podejrzanych momentów</li>
-          <li>Nałożone wskaźniki i wykresy kąta celowania</li>
-          <li>Porównanie: legalny gracz vs. cheater</li>
-          <li>Gotowe checklisty do własnej analizy</li>
-          <li>Dostęp do archiwum 200+ case studies</li>
-        </ul>
-        <a href="#pricing" class="btn-primary">Zacznij za darmo ▶</a>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- PRICING -->
-<section class="pricing-section" id="pricing">
-  <div class="container" style="text-align:center;">
-    <div class="section-label" style="justify-content:center; max-width:400px; margin:0 auto 12px;">Cennik</div>
-    <h2 class="section-title">Wybierz plan</h2>
-    <p class="section-sub" style="margin:0 auto 56px;">Bez ukrytych opłat. Dostęp natychmiastowy po zakupie.</p>
-    <div class="pricing-grid">
-
-      <div class="price-card reveal">
-        <div class="price-name">STARTER</div>
-        <div class="price-val"><span>zł</span>0</div>
-        <div class="price-period">Zawsze bezpłatny</div>
-        <ul class="price-features">
-          <li>Moduł 1 — Podstawy detekcji</li>
-          <li>3 lekcje wideo</li>
-          <li>Forum społeczności</li>
-          <li class="off">Pełny dostęp (18 modułów)</li>
-          <li class="off">Certyfikat</li>
-          <li class="off">Case studies archiwum</li>
-        </ul>
-        <a href="#" class="btn-secondary" style="display:block; text-align:center;">Zacznij za darmo</a>
-      </div>
-
-      <div class="price-card featured reveal">
-        <div class="price-name">PRO</div>
-        <div class="price-val"><span>zł</span>149</div>
-        <div class="price-period">jednorazowo · dożywotni dostęp</div>
-        <ul class="price-features">
-          <li>Wszystkie 18 modułów</li>
-          <li>120+ lekcji wideo HD</li>
-          <li>Archiwum 200+ case studies</li>
-          <li>Certyfikat ukończenia</li>
-          <li>Aktualizacje dożywotnie</li>
-          <li>Priorytetowe wsparcie</li>
-        </ul>
-        <a href="#" class="btn-primary" style="display:block; text-align:center; justify-content:center;">Kup dostęp PRO ▶</a>
-      </div>
-
-      <div class="price-card reveal">
-        <div class="price-name">TEAM</div>
-        <div class="price-val"><span>zł</span>349</div>
-        <div class="price-period">jednorazowo · do 10 osób</div>
-        <ul class="price-features">
-          <li>Wszystko z planu PRO</li>
-          <li>10 kont dla zespołu</li>
-          <li>Panel zarządzania teamem</li>
-          <li>Sesje Q&A z ekspertem</li>
-          <li>Branding certyfikatów</li>
-          <li>Dedykowany opiekun</li>
-        </ul>
-        <a href="#" class="btn-secondary" style="display:block; text-align:center;">Skontaktuj się</a>
-      </div>
-
-    </div>
-  </div>
-</section>
-
-<!-- REVIEWS -->
-<section class="reviews-section">
-  <div class="container">
-    <div class="section-label">Opinie</div>
-    <h2 class="section-title">Co mówią uczniowie</h2>
-    <p class="section-sub">Ponad 4 200 adminów i graczy przeszło przez ten kurs.</p>
-    <div class="reviews-grid">
-
-      <div class="review-card reveal">
-        <div class="review-stars">★★★★★</div>
-        <p class="review-text">"Wreszcie kurs, który tłumaczy jak naprawdę działa aimbot. Przestałem się mylić i zacząłem banować właściwe osoby."</p>
-        <div class="reviewer">
-          <div class="reviewer-avatar">MK</div>
-          <div>
-            <div class="reviewer-name">Marcin K.</div>
-            <div class="reviewer-tag">Admin CS2 · 3 serwery</div>
-          </div>
+    <header>
+        <h1>KOI BOT</h1>
+        <p class="subtitle">Polityka Prywatności</p>
+    </header>
+    
+    <nav>
+        <a href="privacy-policy.html" class="active">Polityka Prywatności</a>
+        <a href="terms-of-service.html">Warunki Korzystania</a>
+    </nav>
+    
+    <div class="container">
+        <div class="brand-box">
+            <strong>🤖 Informacja o KOI BOT</strong>
+            <p><strong>Twórca:</strong> nveisk</p>
+            <p><strong>Email:</strong> nve@discord.com</p>
+            <p>KOI BOT to nowoczesny bot Discord stworzony z dbałością o bezpieczeństwo i prywatność użytkowników.</p>
         </div>
-      </div>
-
-      <div class="review-card reveal">
-        <div class="review-stars">★★★★★</div>
-        <p class="review-text">"Analiza klatka po klatce zmieniła moje podejście. Polecam każdemu kto prowadzi community i nie chce oszustów."</p>
-        <div class="reviewer">
-          <div class="reviewer-avatar">AG</div>
-          <div>
-            <div class="reviewer-name">Agata G.</div>
-            <div class="reviewer-tag">Właścicielka serwera FiveM</div>
-          </div>
+        
+        <div class="legal-section">
+            <h2>1. Wstęp</h2>
+            <p>Niniejsza Polityka Prywatności opisuje, w jaki sposób KOI BOT zbiera, przetwarzania i chroni Twoje dane. Zdajemy sobie sprawę z ważności Twojej prywatności i zobowiązujemy się do jej ochrony zgodnie z obowiązującymi przepisami prawa.</p>
         </div>
-      </div>
-
-      <div class="review-card reveal">
-        <div class="review-stars">★★★★☆</div>
-        <p class="review-text">"Bardzo solidne podstawy. Terminal i case studies to strzał w dziesiątkę. Czekam na moduł o Rust."</p>
-        <div class="reviewer">
-          <div class="reviewer-avatar">PT</div>
-          <div>
-            <div class="reviewer-name">Patryk T.</div>
-            <div class="reviewer-tag">Head Admin · serwer Rust PL</div>
-          </div>
+        
+        <div class="legal-section">
+            <h2>2. Jakie dane zbieramy?</h2>
+            
+            <h3>2.1 Dane automatycznie zbierane</h3>
+            <p>KOI BOT zbiera następujące, niezbędne do prawidłowego funkcjonowania informacje:</p>
+            <ul>
+                <li>Identyfikator serwera (Guild ID) - aby bot działał na określonym serwerze</li>
+                <li>Identyfikatory kanałów - aby bot wiedział, na których kanałach może działać</li>
+                <li>Komendy użytkownika - aby prawidłowo reagować na polecenia</li>
+                <li>Znaczniki czasowe interakcji - dla celów logowania działań bota</li>
+                <li>Publiczne informacje profilu Discord - jeśli są niezbędne do wykonania komendy</li>
+            </ul>
+            
+            <h3>2.2 Dane, które NIE zbieramy</h3>
+            <div class="highlight-box">
+                <strong>✅ KOI BOT NIE zbiera żadnych danych wrażliwych:</strong>
+                <ul>
+                    <li>❌ Hasła ani tokeny dostępu</li>
+                    <li>❌ Prywatne wiadomości lub rozmowy prywatne</li>
+                    <li>❌ Adresy e-mail bez Twojej zgody</li>
+                    <li>❌ Numery telefonów lub inne dane osobowe</li>
+                    <li>❌ Dane finansowe lub karty kredytowe</li>
+                    <li>❌ Lokalizacja geograficzna</li>
+                    <li>❌ Pliki personalne lub dokumenty</li>
+                </ul>
+            </div>
         </div>
-      </div>
-
+        
+        <div class="legal-section">
+            <h2>3. Jak wykorzystujemy zebrane dane?</h2>
+            <p>Zebrane dane wykorzystujemy wyłącznie do:</p>
+            <ul>
+                <li>Zapewnienia prawidłowego funkcjonowania KOI BOT</li>
+                <li>Reagowania na komendy użytkowników</li>
+                <li>Diagnostyki błędów i poprawy wydajności</li>
+                <li>Zapewnienia bezpieczeństwa i zapobiegania nadużyciom</li>
+                <li>Logowania działań dla celów administracyjnych</li>
+            </ul>
+        </div>
+        
+        <div class="legal-section">
+            <h2>4. Bezpieczeństwo</h2>
+            <p>Bezpieczeństwo Twoich danych traktujemy z najwyższą powagą. Stosujemy różne środki techniczne i organizacyjne w celu ochrony zbieranych informacji:</p>
+            <ul>
+                <li>Szyfrowanie danych podczas transmisji (HTTPS/SSL)</li>
+                <li>Ograniczony dostęp do danych</li>
+                <li>Regularne aktualizacje bezpieczeństwa</li>
+                <li>Monitorowanie anomalii i zagrożeń</li>
+            </ul>
+        </div>
+        
+        <div class="legal-section">
+            <h2>5. Przechowywanie danych</h2>
+            <p>Dane zbierane przez KOI BOT przechowywane są na bezpiecznych serwerach. Przechowujemy dane wyłącznie przez czas niezbędny do ich funkcjonowania. W przypadku usunięcia bota z serwera, powiązane dane zostaną usunięte w terminie do 30 dni.</p>
+        </div>
+        
+        <div class="legal-section">
+            <h2>6. Prawa użytkownika</h2>
+            <p>Masz prawo do:</p>
+            <ul>
+                <li><strong>Dostępu do swoich danych</strong> - możesz poprosić o informacje, jakie dane posiadamy</li>
+                <li><strong>Usunięcia danych</strong> - możesz poprosić o usunięcie swoich danych</li>
+                <li><strong>Sprostowania danych</strong> - możesz poprosić o poprawę niedokładnych informacji</li>
+                <li><strong>Przenoszenia danych</strong> - możesz poprosić o eksport swoich danych</li>
+            </ul>
+            <p style="margin-top: 20px;">Aby skorzystać z tych praw, skontaktuj się z twórcą na adres email: <strong>nve@discord.com</strong></p>
+        </div>
+        
+        <div class="legal-section">
+            <h2>7. Zgodność z przepisami</h2>
+            <p>KOI BOT zobowiązuje się do zgodności z:</p>
+            <ul>
+                <li>Rozporządzeniem o ochronie danych (RODO) - dla użytkowników w UE</li>
+                <li>Regulacjami prywatności obowiązującymi w innych jurysdykcjach</li>
+                <li>Warunkami usług Discord</li>
+            </ul>
+        </div>
+        
+        <div class="legal-section">
+            <h2>8. Zmiany w Polityce Prywatności</h2>
+            <p>Zastrzegamy sobie prawo do aktualizacji tej Polityki Prywatności w dowolnym momencie. Zmiany będą opublikowane na tej stronie. Twoje dalsze korzystanie z KOI BOT oznacza akceptację zmian.</p>
+        </div>
+        
+        <div class="legal-section">
+            <h2>9. Kontakt</h2>
+            <div class="highlight-box">
+                <p><strong>Masz pytania lub chcesz skorzystać ze swoich praw?</strong></p>
+                <p style="margin-top: 15px;">📧 Skontaktuj się z nami:</p>
+                <p><strong>Email: nve@discord.com</strong></p>
+                <p>Odpowiemy na Twoje wiadomości w jak najszybszym terminie.</p>
+            </div>
+        </div>
     </div>
-  </div>
-</section>
-
-<!-- FAQ -->
-<section class="faq-section" id="faq">
-  <div class="container" style="text-align:center;">
-    <div class="section-label" style="justify-content:center; max-width:400px; margin:0 auto 12px;">FAQ</div>
-    <h2 class="section-title" style="margin-bottom:48px;">Najczęstsze pytania</h2>
-    <div class="faq-list">
-
-      <div class="faq-item">
-        <div class="faq-q">Czy kurs jest odpowiedni dla początkujących?<span class="arrow">▶</span></div>
-        <div class="faq-a">Tak — pierwszy moduł zaczyna od absolutnych podstaw. Każde pojęcie jest wyjaśnione przed użyciem w przykładach.</div>
-      </div>
-
-      <div class="faq-item">
-        <div class="faq-q">Do jakich gier odnosi się kurs?<span class="arrow">▶</span></div>
-        <div class="faq-a">Głównie gry FPS (CS2, Valorant, Rust, Escape from Tarkov), ale techniki detekcji są uniwersalne i można je zastosować w każdej grze wieloosobowej.</div>
-      </div>
-
-      <div class="faq-item">
-        <div class="faq-q">Czy mam dostęp do aktualizacji?<span class="arrow">▶</span></div>
-        <div class="faq-a">W planie PRO i TEAM — tak, dożywotnie. Cheaty ewoluują, więc kurs jest regularnie aktualizowany o nowe techniki i przypadki.</div>
-      </div>
-
-      <div class="faq-item">
-        <div class="faq-q">Czy mogę uzyskać zwrot pieniędzy?<span class="arrow">▶</span></div>
-        <div class="faq-a">Oferujemy 14-dniową gwarancję zwrotu bez podawania przyczyny. Napisz do nas na kontakt@mcextreme.pl.</div>
-      </div>
-
-      <div class="faq-item">
-        <div class="faq-q">Czy kurs uczy jak tworzyć cheaty?<span class="arrow">▶</span></div>
-        <div class="faq-a">Nie. Kurs jest wyłącznie edukacyjny i skupia się na detekcji — rozpoznawaniu, analizowaniu i reagowaniu na oszustwa w grach.</div>
-      </div>
-
-    </div>
-  </div>
-</section>
-
-<!-- CTA BANNER -->
-<section class="cta-banner">
-  <div class="container">
-    <h2>Gotowy, żeby <span class="text-accent">widzieć więcej</span>?</h2>
-    <p>Dołącz do 4 200+ adminów, którzy nie dają się już oszukiwać.</p>
-    <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;">
-      <a href="#pricing" class="btn-primary">Zacznij za darmo ▶</a>
-      <a href="#modules" class="btn-secondary">Przeglądaj program</a>
-    </div>
-  </div>
-</section>
-
-<!-- FOOTER -->
-<footer>
-  <div class="footer-inner">
-    <div class="footer-top">
-      <div class="footer-brand">
-        <a href="#" class="nav-logo">mc<span>extreme</span>.pl</a>
-        <p>Platforma edukacyjna dla adminów i graczy. Naucz się wykrywać cheaty i chroń swoje community.</p>
-      </div>
-      <div class="footer-col">
-        <h4>Kurs</h4>
-        <ul>
-          <li><a href="#">Program kursu</a></li>
-          <li><a href="#">Demo lekcji</a></li>
-          <li><a href="#">Certyfikat</a></li>
-          <li><a href="#">Case studies</a></li>
-        </ul>
-      </div>
-      <div class="footer-col">
-        <h4>Firma</h4>
-        <ul>
-          <li><a href="#">O nas</a></li>
-          <li><a href="#">Blog</a></li>
-          <li><a href="#">Kontakt</a></li>
-          <li><a href="#">Afiliacja</a></li>
-        </ul>
-      </div>
-      <div class="footer-col">
-        <h4>Prawne</h4>
-        <ul>
-          <li><a href="#">Regulamin</a></li>
-          <li><a href="#">Polityka prywatności</a></li>
-          <li><a href="#">Cookies</a></li>
-        </ul>
-      </div>
-    </div>
-    <div class="footer-bottom">
-      <p>© 2025 mcextreme.pl · Wszelkie prawa zastrzeżone</p>
-      <p style="font-family:'Share Tech Mono',monospace; font-size:12px; color:var(--muted);">v2.4.1 · PL</p>
-    </div>
-  </div>
-</footer>
-
-<script>
-  // FAQ toggle
-  document.querySelectorAll('.faq-q').forEach(q => {
-    q.addEventListener('click', () => {
-      const item = q.parentElement;
-      const isOpen = item.classList.contains('open');
-      document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
-      if (!isOpen) item.classList.add('open');
-    });
-  });
-
-  // Scroll reveal
-  const reveals = document.querySelectorAll('.reveal');
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach((entry, i) => {
-      if (entry.isIntersecting) {
-        setTimeout(() => entry.target.classList.add('visible'), i * 60);
-        observer.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.1 });
-  reveals.forEach(el => observer.observe(el));
-
-  // Counter animation
-  function animateCounter(el, target, duration = 1800) {
-    let start = 0;
-    const step = target / (duration / 16);
-    const timer = setInterval(() => {
-      start += step;
-      if (start >= target) { start = target; clearInterval(timer); }
-      el.textContent = Math.floor(start).toLocaleString('pl') + (el.dataset.suffix || '');
-    }, 16);
-  }
-
-  const statsObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        document.querySelectorAll('.stat-val').forEach(el => {
-          const raw = el.textContent.replace(/[^0-9]/g, '');
-          const suffix = el.textContent.replace(/[0-9,+]/g, '');
-          el.dataset.suffix = suffix;
-          animateCounter(el, parseInt(raw));
-        });
-        statsObserver.disconnect();
-      }
-    });
-  }, { threshold: 0.5 });
-
-  const statsEl = document.querySelector('.hero-stats');
-  if (statsEl) statsObserver.observe(statsEl);
-</script>
+    
+    <footer>
+        © 2026 nveisk | Wszystkie prawa zastrzeżone
+    </footer>
 </body>
 </html>
